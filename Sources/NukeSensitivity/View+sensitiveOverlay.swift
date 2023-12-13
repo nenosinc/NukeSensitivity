@@ -23,7 +23,7 @@ public extension View {
     /// any content that the system framework flags as sensitive. You will need to
     /// perform additional setup in your application to properly use this modifier.
     ///
-    /// - important: This modifier must be used directly with the ``SwiftUI.Image`` returned
+    /// - important: This modifier must be used directly with the `SwiftUI.Image` returned
     ///   from NukeUI's content sensitivity `LazyImage` initializers, either:
     ///   ``NukeUI/LazyImage/init(url:sensitiveContentShim:)`` or
     ///   ``NukeUI/LazyImage/init(url:transaction:sensitiveContentShim:content:)``.
@@ -31,7 +31,7 @@ public extension View {
     /// - parameter viewModel: A ``SensitiveContentShim`` instance.
     /// - parameter overlayTitle: The user-facing label displayed over sensitive
     ///   content. Defaults to "This image may be sensitive."
-    /// - parameter clipShape: The ``SwiftUI.Shape`` used to clip the content overlay.
+    /// - parameter clipShape: The `SwiftUI.Shape` used to clip the content overlay.
     /// - parameter actionButtons: _Optional_. If provided, a context menu will appear
     ///   in the top-trailing corner of the sensitive overlay with the given buttons.
     ///

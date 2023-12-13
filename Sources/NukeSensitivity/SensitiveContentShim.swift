@@ -8,10 +8,44 @@
 
 import Combine
 import Foundation
+#if canImport(SensitiveContentAnalysis)
 import SensitiveContentAnalysis
+#endif
 import SwiftUI
 
 @MainActor public class SensitiveContentShim: ObservableObject {
+    
+    public enum SensitivityPolicy: Int, @unchecked Sendable {
+        /// No feature enabled that is requiring Sensitive Analysis on device, analysis will
+        /// be disabled.
+        ///
+        case disabled = 0
+
+        /// Sensitive Analysis is enabled on device through "Sensitive Content Warning" in
+        /// Settings. It is expected that brief/inline UI, like simple "show" button.
+        ///
+        case simpleInterventions = 1
+
+        /// Sensitive Analysis is enabled for kids or teens in ScreenTime through
+        /// "Communications Safety" feature. It's expected to have more descriptive UI for
+        /// the user, explaining potential risks.
+        ///
+        case descriptiveInterventions = 2
+        
+        #if canImport(SensitiveContentAnalysis)
+        @available(iOS 17.0, macOS 14.0, *)
+        static func value(from policy: SCSensitivityAnalysisPolicy) -> SensitivityPolicy {
+            switch policy {
+            case .disabled: return SensitivityPolicy.disabled
+            case .simpleInterventions: return SensitivityPolicy.simpleInterventions
+            case .descriptiveInterventions: return SensitivityPolicy.descriptiveInterventions
+            @unknown default: 
+                print("WARNING: A new SCSensitivityAnalysisPolicy is set and is unhandled by NukeSensitivity.")
+                return .disabled
+            }
+        }
+        #endif
+    }
     
     /// Publisher that, when `true`, indicates (1) sensitive content has been detected,
     /// (2) the user's settings require **additional** intervention before allowing
@@ -45,20 +79,23 @@ import SwiftUI
     
     /// The current `SCSensitivityAnalysisPolicy` for this app.
     ///
-    @Published public var policy: SCSensitivityAnalysisPolicy
+    @Published public var policy: SensitivityPolicy
     
-    private let analyzer = SCSensitivityAnalyzer()
     private var triggerFalsePositive: Bool = false
     
     /// Create an instance of the `SensitiveContentShim` for use with
-    /// ``NukeUI/LazyImage`` and the `sensitiveOverlay` modifier.
+    /// `NukeUI/LazyImage` and the `sensitiveOverlay` modifier.
     ///
     /// - parameter useFalsePositiveForDebug: Set to true while debugging to force
     ///   false-positives in the system SCA framework. Defaults to `false`. Ignored if the
     ///   `DEBUG` compiler macro is undefined.
     ///
     public init(useFalsePositiveForDebug: Bool = false) {
-        policy = analyzer.analysisPolicy
+        if #available(macOS 14.0, iOS 17.0, *) {
+            policy = SensitivityPolicy.value(from: SCSensitivityAnalyzer().analysisPolicy)
+        } else {
+            policy = .disabled
+        }
         
         #if DEBUG
         triggerFalsePositive = useFalsePositiveForDebug
@@ -100,8 +137,12 @@ import SwiftUI
             }
             #endif
             
-            let response = try await analyzer.analyzeImage(at: urlToAnalyze)
-            isSensitive = response.isSensitive
+            if #available(macOS 14.0, *) {
+                let response = try await SCSensitivityAnalyzer().analyzeImage(at: urlToAnalyze)
+                isSensitive = response.isSensitive
+            } else {
+                isSensitive = false
+            }
         }
     }
     
@@ -114,6 +155,7 @@ import SwiftUI
     ///
     public func proceedToShowContent() {
         showSensitiveContent = true
+        needsIntervention = false
     }
     
     /// Immediately hide sensitive content.
