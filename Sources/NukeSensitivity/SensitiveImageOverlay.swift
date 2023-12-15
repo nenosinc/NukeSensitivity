@@ -59,7 +59,6 @@ public struct SensitiveImageOverlay<Content: View, S: Shape, MenuButtons: View>:
         if viewModel.showSensitiveContent == false {
             Text(overlayTitle)
                 .fontWeight(.medium)
-                .fontDesign(.rounded)
                 .foregroundStyle(.secondary)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

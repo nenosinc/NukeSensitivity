@@ -137,7 +137,7 @@ import SwiftUI
             }
             #endif
             
-            if #available(macOS 14.0, *) {
+            if #available(iOS 17.0, macOS 14.0, *) {
                 let response = try await SCSensitivityAnalyzer().analyzeImage(at: urlToAnalyze)
                 isSensitive = response.isSensitive
             } else {
