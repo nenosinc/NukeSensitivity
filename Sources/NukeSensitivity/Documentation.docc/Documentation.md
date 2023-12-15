@@ -10,10 +10,15 @@ When a user who has opted-in to Sensitive Content Analysis (or has it enabled on
 
 Before using this library, you'll need to do some additional setup in your application. Please read the <doc:GettingStarted> document to learn more.
 
-## Comaptibility
+## Compatibility
 This library is compatible in projects targeting iOS 16 / macOS 13 and later. However, the Sensitive Content Analysis framework is only available on iOS 17.0 and macOS 14.0 and later. Use of the sensitive `LazyImage` initializers, `sensitiveOverlay`, and `SensitiveContentShim` have no effect on iOS / macOS versions prior to 17.0 / 14.0.
 
 ## Topics
+
+### Setup, Integration, and Testing
+
+- <doc:GettingStarted>
+- <doc:AppIntegration>
 
 ### Loading Sensitive LazyImages
 

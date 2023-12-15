@@ -1,7 +1,5 @@
 # NukeSensitivity
-iOS 17 Sensitive Content Analysis integration for [Nuke](https://github.com/kean/Nuke) written in swift. 
-
-NukeSensitivity makes it easy to detect and obscure sensitive content in images loaded and displayed with NukeUI.
+iOS 17 Sensitive Content Analysis integration for [Nuke](https://github.com/kean/Nuke) written in swift. NukeSensitivity makes it easy to detect and obscure sensitive content in images loaded and displayed with NukeUI.
 
 ## Overview
 Starting in iOS 17.0 and macOS 14.0, Apple provides a [Sensitive Content Analysis framework](https://developer.apple.com/documentation/sensitivecontentanalysis) for use in applications where users may want to hide potentially sensitive images and video. This library bridges Nuke -- the asynchronous image loading library -- and Apple's framework to make it easy to obfuscate content for users who opt-in.
